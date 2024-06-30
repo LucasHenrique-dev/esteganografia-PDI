@@ -26,4 +26,4 @@ Visualize os scripts desenvolvidos para o projeto:
 
 Esse projeto está sob licença. Veja o arquivo [LICENÇA](LICENSE) para mais detalhes.
 
-[⬆ Voltar ao topo](#-%EF%B8%8F-esteganografia-pdi)<br>
+[⬆ Voltar ao topo](#%EF%B8%8F-esteganografia-pdi)<br>

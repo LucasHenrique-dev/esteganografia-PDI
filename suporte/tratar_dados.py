@@ -5,11 +5,11 @@ from IPython.display import HTML
 from base64 import b64encode
 
 
-def image_to_array(image_path, gray=True):
+def image_to_array(image_path, gray=False):
     if gray:
-        return imageio.imread(image_path)
+        return imageio.imread(image_path, pilmode='L')
     else:
-        return imageio.imread(image_path, pilmode='RGBA')
+        return imageio.imread(image_path)
 
 
 def sumarize(image_array):
@@ -90,3 +90,35 @@ def bits_to_message(bits):
     chars = [bits[i:i+8] for i in range(0, len(bits), 8)]
     message = ''.join(chr(int(char, 2)) for char in chars)
     return message
+
+
+def interpolacao_replicacao(imagem, nova_largura=0, nova_altura=0):
+    # Obter a altura, largura e número de canais de cores da imagem original
+    altura, largura = imagem.shape[:2]
+    num_canais = 1 if len(imagem.shape) < 3 else imagem.shape[2]
+
+    nova_largura = largura if nova_largura == 0 else nova_largura
+    nova_altura = altura if nova_altura == 0 else nova_altura
+
+    # Calcular os fatores de escala para largura e altura
+    fator_escala_largura = nova_largura / largura
+    fator_escala_altura = nova_altura / altura
+
+    # Redimensionar a imagem usando interpolação bilinear
+    if num_canais == 1:
+        nova_imagem = np.zeros((nova_altura, nova_largura))
+    else:
+        nova_imagem = np.zeros((nova_altura, nova_largura, num_canais))
+    for y in range(nova_altura):
+        for x in range(nova_largura):
+            # Calcular a coordenada na imagem original
+            origem_x = int(x / fator_escala_largura)
+            origem_y = int(y / fator_escala_altura)
+
+            # Copiar o pixel da imagem original para a imagem redimensionada
+            if num_canais == 1:
+                nova_imagem[y, x] = imagem[origem_y, origem_x]
+            else:
+                nova_imagem[y, x] = imagem[origem_y, origem_x, :]
+
+    return nova_imagem.astype(np.uint8)
