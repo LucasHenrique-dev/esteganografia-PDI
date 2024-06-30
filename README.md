@@ -4,7 +4,7 @@
 ![Google Colab](https://img.shields.io/badge/Google%20Colab-F9AB00?style=for-the-badge&logo=Google%20Colab&logoColor=white)
 
 ## ℹ Tabela de Conteúdos
-- [Descrição do Projeto](#dart-projeto-da-cadeira-de-modelagem-analítica-20231)
+- [Descrição do Projeto](#dart-projeto-da-cadeira-de-processamento-digital-de-imagem-20241)
 - [Especificações](#-especificações-do-projeto)
 
 ## :dart: Projeto da Cadeira de Processamento Digital de Imagem 2024.1
@@ -17,9 +17,13 @@ Este trabalho aprofunda os conhecimentos sobre a área de esteganografia, onde t
 O projeto foi desenvolvido na linguagem Python utilizando o ambiente de desenvolvimento do [Goolge Colaboratory](https://colab.research.google.com/) e [Pycharm](https://www.jetbrains.com/pycharm/)
 
 Visualize os scripts desenvolvidos para o projeto:
+- [LSB](LSB)
+- [DCT](DCT)
+- [FFT](FFT)
+- [SSB](SSB)
 
 ## 📝 Licença
 
 Esse projeto está sob licença. Veja o arquivo [LICENÇA](LICENSE) para mais detalhes.
 
-[⬆ Voltar ao topo](#-esteganografia-pdi)<br>
+[⬆ Voltar ao topo](#-%EF%B8%8F-esteganografia-pdi)<br>
