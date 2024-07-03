@@ -1,8 +1,10 @@
+from matplotlib import pyplot as plt
+
 from esteganalise.lsb import bitplanes
 from suporte.analisar_imagens import calculate_psnr, ssim_diff_images, get_calculation_psnr_ssim
-from suporte.exibir_imagens import compare_histograms, show_image, frequency_domain_analysis_single
+from suporte.exibir_imagens import compare_histograms, show_image, frequency_domain_analysis_single, comparar_imagens
 from suporte.tratar_dados import image_to_array, message_to_bits, salvar_imagem, bits_to_message, gray_scale, \
-    interpolacao_replicacao
+    interpolacao_replicacao, sumarize
 import numpy as np
 
 
@@ -93,43 +95,82 @@ def decode_image_lsb(encoded_image_path, grayscale=False):
     return secret_image
 
 
-# cover_folder = "../imagens_diversas"
-# save_folder = "stego_images"
-# cover_image = "mulher_chapeu.png"
-# stego_image = "mulher_chapeu_segredo.png"
-# secret = "../imagens_diversas/qrcode_hello_world.png"
+def analyze_image_lsb(image_path, grayscale=False):
+    image = image_to_array(image_path)
+    if grayscale:
+        image = image[:, :, 0]  # Considerar apenas o canal de intensidade para imagens em escala de cinza
 
-cover_folder = "cover_images"
+    # Extraindo os bits menos significativos
+    lsb = image & 1
+
+    # Convertendo os bits menos significativos para uma imagem visível
+    lsb_image = lsb * 255
+
+    # Exibindo a imagem dos bits menos significativos
+    plt.imshow(lsb_image, cmap='gray')
+    plt.title("Imagem dos Bits Menos Significativos")
+    plt.axis('off')
+    plt.show()
+
+    return lsb_image
+
+
+# cover_folder = "../imagens_diversas"
+# cover_image = "mulher_chapeu.png"
+# save_folder = "stego_images"
+# stego_image = "mulher_chapeu_braz_cubas.png"
+# secret = ""
+
+cover_folder = "../imagens_diversas"
+cover_image = "mulher_chapeu.png"
 save_folder = "stego_images"
-cover_image = "../imagens_diversas/qrcode_hello_world.png"
-stego_image = "gray_halloween_segredo.png"
-secret = "stego_images/kaggle_gray_1.png"
+stego_image = "mulher_chapeu_maca.png"
+secret = "cover_images/maca.png"
 
 # ESCONDER TEXTO
-# encode_lsb(f"{cover_folder}/{cover_image}", secret, stego_image, save_folder)
+# encode_lsb(f"{cover_folder}/{cover_image}", secret, stego_image, save_folder, True)
 #
-# secret_message = decode_lsb(f"{save_folder}/{stego_image}", len(secret))
+# secret_message = decode_lsb(f"{save_folder}/{stego_image}", len(secret), True)
 #
 # print(f"Mensagem Secreta: {secret_message}")
 
 # ESCONDER IMAGEM
-# encode_image_lsb(f"{cover_image}", secret, stego_image, save_folder, True)
-
+# encode_image_lsb(f"{cover_folder}/{cover_image}", secret, stego_image, save_folder, True)
+#
 # secret_image = decode_image_lsb(f"{save_folder}/{stego_image}", True)
+# secret_image = analyze_image_lsb(f"{save_folder}/{stego_image}", True)
 #
 # print(f"Mensagem Secreta:")
 # show_image(secret_image)
 
-img1 = image_to_array(f"{secret}", True)
+# ANÁLISE BIT PLANES
+# img1 = image_to_array(f"{cover_folder}/{cover_image}", True)
 # img2 = image_to_array(f"{save_folder}/{stego_image}", True)
-bit_planes = bitplanes(img1)
+#
+# bit_planes = bitplanes(img2)
+# show_image(bit_planes, True)
 
-show_image(bit_planes)
-# compare_histograms([img1, img2], ["Imgem 1", "Imgem 2"])
+# for i in bit_planes:
+#     show_image(i, True)
+
+# ANÁLISE HISTOGRAMA
+# img1 = image_to_array(f"{cover_folder}/{cover_image}", True)
+# img2 = image_to_array(f"{save_folder}/{stego_image}", True)
+# comparar_imagens(img1, img2, titulos=["Imgem Antes", "Imgem Depois"])
+# compare_histograms([img1, img2], ["Imgem Antes", "Imgem Depois"])
+
+# ANÁLISE DOMÍNIO DA FREQUÊNCIA
+# img1 = image_to_array(f"{cover_folder}/{cover_image}", True)
+# img2 = image_to_array(f"{save_folder}/{stego_image}", True)
 # frequency_domain_analysis_single(img1)
 # frequency_domain_analysis_single(img2)
-# calculate_psnr(img1, img2)
-# ssim_diff_images(img1, img2)
-# get_calculation_psnr_ssim(img1, img2)
 
+# ANÁLISE PSNR E SSIM
+img1 = image_to_array(f"{cover_folder}/{cover_image}", True)
+img2 = image_to_array(f"{save_folder}/{stego_image}", True)
+# calculate_psnr(img1, img2)
+get_calculation_psnr_ssim(img1, img2)
+# ssim_diff_images(img1, img2)
+
+# REFERÊNCIA
 # https://medium.com/swlh/lsb-image-steganography-using-python-2bbbee2c69a2

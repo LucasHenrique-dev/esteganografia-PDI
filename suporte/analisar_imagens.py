@@ -71,8 +71,8 @@ def numeric_psnr_ssim(original, noisy):
 
 
 def get_calculation_psnr_ssim(original, noisy):
-    original = gray_scale(original)
-    noisy = gray_scale(noisy)
+    # original = gray_scale(original)
+    # noisy = gray_scale(noisy)
 
     # Calculate PSNR
     psnr_value = calculate_psnr(original, noisy)
@@ -105,11 +105,11 @@ def get_calculation_psnr_ssim(original, noisy):
 
 def ssim_diff_images(before, after):
     # Convert images to grayscale
-    before_gray = cv2.cvtColor(before, cv2.COLOR_BGR2GRAY)
-    after_gray = cv2.cvtColor(after, cv2.COLOR_BGR2GRAY)
+    # before_gray = cv2.cvtColor(before, cv2.COLOR_BGR2GRAY)
+    # after_gray = cv2.cvtColor(after, cv2.COLOR_BGR2GRAY)
 
     # Compute SSIM between two images
-    (score, diff) = structural_similarity(before_gray, after_gray, full=True)
+    (score, diff) = structural_similarity(before, after, full=True)
     print("Image similarity", score)
 
     # The diff image contains the actual image differences between the two images

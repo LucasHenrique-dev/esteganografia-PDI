@@ -14,3 +14,4 @@ def bitplanes(image):
     # stack generated images
     b = np.hstack(out)
     return Image.fromarray(b)
+    # return out
