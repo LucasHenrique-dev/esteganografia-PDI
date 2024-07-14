@@ -1,6 +1,6 @@
 from matplotlib import pyplot as plt
 
-from esteganalise.lsb import bitplanes
+from esteganalise.lsb import bitplanes, recover_message, select_roi
 from suporte.analisar_imagens import calculate_psnr, ssim_diff_images, get_calculation_psnr_ssim
 from suporte.exibir_imagens import compare_histograms, show_image, frequency_domain_analysis_single, comparar_imagens
 from suporte.tratar_dados import image_to_array, message_to_bits, salvar_imagem, bits_to_message, gray_scale, \
@@ -124,7 +124,7 @@ def analyze_image_lsb(image_path, grayscale=False):
 cover_folder = "../imagens_diversas"
 cover_image = "mulher_chapeu.png"
 save_folder = "stego_images"
-stego_image = "mulher_chapeu_maca.png"
+stego_image = "kaggle_gray_0.png"
 secret = "cover_images/maca.png"
 
 # ESCONDER TEXTO
@@ -166,11 +166,33 @@ secret = "cover_images/maca.png"
 # frequency_domain_analysis_single(img2)
 
 # ANÁLISE PSNR E SSIM
+# img1 = image_to_array(f"{cover_folder}/{cover_image}", True)
+# img2 = image_to_array(f"{save_folder}/{stego_image}", True)
+# calculate_psnr(img1, img2)
+# get_calculation_psnr_ssim(img1, img2)
+# ssim_diff_images(img1, img2)
+
+# IDENTIFICAR ZONA DE INTERESSE
+# image = image_to_array(f"img_lsb.png", True)
+# roi = select_roi(image)
+#
+## Extrair a ROIc
+# x, y, w, h = roi
+# roi_image = image[y:y+h, x:x+w]
+
+## Exibir a ROI extraída
+# plt.imshow(roi_image, cmap='gray')
+# plt.title("Região de Interesse (ROI)")
+# plt.axis('off')
+# plt.show()
+
+# RECUPERAR MENSAGEM
 img1 = image_to_array(f"{cover_folder}/{cover_image}", True)
 img2 = image_to_array(f"{save_folder}/{stego_image}", True)
-# calculate_psnr(img1, img2)
-get_calculation_psnr_ssim(img1, img2)
-# ssim_diff_images(img1, img2)
+bit_planes = bitplanes(img2)
+# sumarize(bit_planes)
+show_image(bit_planes)
+recover_message(bit_planes)
 
 # REFERÊNCIA
 # https://medium.com/swlh/lsb-image-steganography-using-python-2bbbee2c69a2
