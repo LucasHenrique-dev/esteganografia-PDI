@@ -1,10 +1,11 @@
 from matplotlib import pyplot as plt
 
-from esteganalise.lsb import bitplanes, recover_message, select_roi
+from esteganalise.lsb import bitplanes, recover_message, select_roi, calculate_entropy, chi_square, \
+    calculate_correlation, visualize_differences, analyze_subimages
 from suporte.analisar_imagens import calculate_psnr, ssim_diff_images, get_calculation_psnr_ssim
 from suporte.exibir_imagens import compare_histograms, show_image, frequency_domain_analysis_single, comparar_imagens
 from suporte.tratar_dados import image_to_array, message_to_bits, salvar_imagem, bits_to_message, gray_scale, \
-    interpolacao_replicacao, sumarize
+    interpolacao_replicacao, sumarize, filtro_media
 import numpy as np
 
 
@@ -124,7 +125,7 @@ def analyze_image_lsb(image_path, grayscale=False):
 cover_folder = "../imagens_diversas"
 cover_image = "mulher_chapeu.png"
 save_folder = "stego_images"
-stego_image = "kaggle_gray_0.png"
+stego_image = "mulher_chapeu_braz_cubas.png"
 secret = "cover_images/maca.png"
 
 # ESCONDER TEXTO
@@ -168,7 +169,7 @@ secret = "cover_images/maca.png"
 # ANÁLISE PSNR E SSIM
 # img1 = image_to_array(f"{cover_folder}/{cover_image}", True)
 # img2 = image_to_array(f"{save_folder}/{stego_image}", True)
-# calculate_psnr(img1, img2)
+# psnr = calculate_psnr(img1, img2)
 # get_calculation_psnr_ssim(img1, img2)
 # ssim_diff_images(img1, img2)
 
@@ -176,23 +177,80 @@ secret = "cover_images/maca.png"
 # image = image_to_array(f"img_lsb.png", True)
 # roi = select_roi(image)
 #
-## Extrair a ROIc
+# # Extrair a ROIc
 # x, y, w, h = roi
 # roi_image = image[y:y+h, x:x+w]
-
-## Exibir a ROI extraída
+#
+# # Exibir a ROI extraída
 # plt.imshow(roi_image, cmap='gray')
 # plt.title("Região de Interesse (ROI)")
 # plt.axis('off')
 # plt.show()
 
 # RECUPERAR MENSAGEM
+# img1 = image_to_array(f"{cover_folder}/{cover_image}", True)
+# img2 = image_to_array(f"{save_folder}/{stego_image}", True)
+# bit_planes = bitplanes(img2)
+# sumarize(bit_planes)
+# show_image(bit_planes)
+# recover_message(bit_planes, bits=1, n_pixels_height=340)
+
+# ANÁLISE ENTROPIA
+# img1 = image_to_array(f"{cover_folder}/{cover_image}", True)
+# img2 = image_to_array(f"{save_folder}/{stego_image}", True)
+#
+# entropy1 = calculate_entropy(img1)
+# entropy2 = calculate_entropy(img2)
+# print(f'Entropia da imagem: {entropy1}')
+# print(f'Entropia da imagem: {entropy2}')
+
+# ANÁLISE CHI SQUARE
+# img1 = image_to_array(f"{cover_folder}/{cover_image}", True)
+# img2 = image_to_array(f"{save_folder}/{stego_image}", True)
+#
+# chi_square_stat1, p_value1 = chi_square(img1)
+# chi_square_stat2, p_value2 = chi_square(img2)
+#
+# print(f'Chi-Square Stat: {chi_square_stat1}')
+# print(f'P-Value: {p_value1}')
+# print(f'Chi-Square Stat: {chi_square_stat2}')
+# print(f'P-Value: {p_value2}')
+
+# CORRELAÇÃO DE PIXELS
+# img1 = image_to_array(f"{cover_folder}/{cover_image}", True)
+# img2 = image_to_array(f"{save_folder}/{stego_image}", True)
+#
+# mean_horizontal1, mean_vertical1 = calculate_correlation(img1)
+# print(f'Correlação Horizontal Média: {mean_horizontal1}')
+# print(f'Correlação Vertical Média: {mean_vertical1}')
+#
+# mean_horizontal2, mean_vertical2 = calculate_correlation(img2)
+# print(f'Correlação Horizontal Média: {mean_horizontal2}')
+# print(f'Correlação Vertical Média: {mean_vertical2}')
+
+# VISUALIZAR DIFERENÇA
+# img1 = image_to_array(f"{cover_folder}/{cover_image}", True)
+# img2 = image_to_array(f"{save_folder}/{stego_image}", True)
+
+# visualize_differences(img1, img2)
+
+# ANÁLISE DE SUBIMAGEM
+# img1 = image_to_array(f"{cover_folder}/{cover_image}", True)
+# img2 = image_to_array(f"{save_folder}/{stego_image}", True)
+#
+# patterns = analyze_subimages(img1)
+# plt.hist(patterns, bins=50)
+# plt.title('Histograma de Padrões em Sub-Imagens')
+# plt.show()
+
+# APLICAR FILTRO MEDIANA
 img1 = image_to_array(f"{cover_folder}/{cover_image}", True)
 img2 = image_to_array(f"{save_folder}/{stego_image}", True)
-bit_planes = bitplanes(img2)
-# sumarize(bit_planes)
-show_image(bit_planes)
-recover_message(bit_planes)
 
-# REFERÊNCIA
-# https://medium.com/swlh/lsb-image-steganography-using-python-2bbbee2c69a2
+imagem_filtrada = filtro_media(img2, 3)
+show_image(imagem_filtrada, True)
+
+bit_planes = bitplanes(imagem_filtrada)
+sumarize(bit_planes)
+show_image(bit_planes)
+recover_message(bit_planes, bits=1, n_pixels_height=120)

@@ -122,3 +122,24 @@ def interpolacao_replicacao(imagem, nova_largura=0, nova_altura=0):
                 nova_imagem[y, x] = imagem[origem_y, origem_x, :]
 
     return nova_imagem.astype(np.uint8)
+
+
+def filtro_media(imagem, tamanho_filtro):
+    altura, largura = imagem.shape
+    nova_imagem = np.zeros_like(imagem)
+    padding = tamanho_filtro // 2
+
+    # Adicionar padding à imagem
+    imagem_pad = np.pad(imagem, ((padding, padding), (padding, padding)), mode='edge')
+
+    # Loop pelos pixels da imagem
+    for i in range(altura):
+        for j in range(largura):
+            # Extrair a região da imagem correspondente ao filtro
+            regiao = imagem_pad[i:i+tamanho_filtro, j:j+tamanho_filtro]
+            # Calcular a média dos valores da região para cada canal de cor
+            media = np.mean(regiao)
+            # Atribuir a média aos canais de cor correspondentes na nova imagem
+            nova_imagem[i, j] = media
+
+    return nova_imagem
